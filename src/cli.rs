@@ -2,6 +2,8 @@ use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
 pub enum Action {
+    /// Add bookmark to the journal file.
+    Add,
     /// List all bookmarks in the journal file.
     List,
 }
