@@ -1,9 +1,15 @@
-use serde::{Deserialize, Serialize};
+extern crate skim;
 use core::fmt;
+use serde::{Deserialize, Serialize};
+use skim::prelude::*;
+use skim::{Skim, SkimItem, SkimItemReceiver, SkimItemSender};
 use std::{
+    borrow::Cow,
     fs::{File, OpenOptions},
     io::{stdin, stdout, BufRead, Error, Seek, SeekFrom, Write},
     path::PathBuf,
+    process::Command,
+    sync::Arc,
 };
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -15,6 +21,16 @@ pub struct Bookmark {
 impl fmt::Display for Bookmark {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "[{}]({})", self.title, self.url)
+    }
+}
+
+impl SkimItem for Bookmark {
+    fn text(&self) -> Cow<str> {
+        Cow::Borrowed(&self.title)
+    }
+
+    fn output(&self) -> Cow<str> {
+        Cow::Borrowed(&self.url)
     }
 }
 
@@ -45,7 +61,7 @@ pub fn add_bookmark(journal_file: PathBuf) -> Result<(), Error> {
 
     let bookmark = Bookmark {
         title: title.trim().to_string(),
-        url: url.trim().to_string()
+        url: url.trim().to_string(),
     };
 
     let file = OpenOptions::new()
@@ -66,12 +82,36 @@ pub fn list_bookmarks(journal_file: PathBuf) -> Result<(), Error> {
     let bookmarks = collect_bookmarks(&file)?;
     if bookmarks.is_empty() {
         println!("Bookmark list is empty!");
-    } else {
-        let mut order: u32 = 1;
-        for bookmark in bookmarks.iter() {
-            println!("{}: {}", order, bookmark);
-            order += 1;
-        }
+        return Ok(());
     }
+
+    let options = SkimOptionsBuilder::default()
+        .height(Some("50%"))
+        .multi(true)
+        .bind(vec!["Enter:accept"])
+        .build()
+        .unwrap();
+
+    let (tx_item, rx_item): (SkimItemSender, SkimItemReceiver) = unbounded();
+    for bookmark in bookmarks {
+        let _ = tx_item.send(Arc::new(bookmark));
+    }
+    drop(tx_item);
+
+    let selected_items = Skim::run_with(&options, Some(rx_item))
+        .map(|out| match out.final_key {
+            Key::Enter => out.selected_items,
+            _ => Vec::new(),
+        })
+        .unwrap_or_else(|| Vec::new());
+
+    for item in selected_items.iter() {
+        let url = item.output();
+        Command::new("open")
+            .arg(url.as_ref())
+            .output()
+            .expect("faild to execute process");
+    }
+
     Ok(())
 }
