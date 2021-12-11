@@ -1,5 +1,4 @@
 extern crate skim;
-use core::fmt;
 use serde::{Deserialize, Serialize};
 use skim::prelude::*;
 use skim::{Skim, SkimItem, SkimItemReceiver, SkimItemSender};
@@ -14,19 +13,13 @@ use std::{
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Bookmark {
-    title: String,
     url: String,
-}
-
-impl fmt::Display for Bookmark {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "[{}]({})", self.title, self.url)
-    }
+    inner: String
 }
 
 impl SkimItem for Bookmark {
     fn text(&self) -> Cow<str> {
-        Cow::Borrowed(&self.title)
+        Cow::Borrowed(&self.inner)
     }
 
     fn output(&self) -> Cow<str> {
@@ -50,18 +43,23 @@ pub fn add_bookmark(journal_file: PathBuf) -> Result<(), Error> {
     let mut handle = reader.lock();
 
     let mut title = String::new();
-    print!("Title: ");
+    print!("Title> ");
     stdout().flush()?;
     handle.read_line(&mut title)?;
 
     let mut url = String::new();
-    print!("URL: ");
+    print!("URL> ");
     stdout().flush()?;
     handle.read_line(&mut url)?;
 
+    let mut tags = String::new();
+    print!("Tags> ");
+    stdout().flush()?;
+    handle.read_line(&mut tags)?;
+
     let bookmark = Bookmark {
-        title: title.trim().to_string(),
         url: url.trim().to_string(),
+        inner: title.trim().to_string() + " ["+ tags.trim() + "]",
     };
 
     let file = OpenOptions::new()
