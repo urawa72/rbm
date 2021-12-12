@@ -5,7 +5,7 @@ use rbm::cli::{Action::*, CommandLineArgs};
 
 fn find_journal_file() -> Option<PathBuf> {
     home::home_dir().map(|mut path| {
-        path.push(".rusty-bookmarks.json");
+        path.push(".RustyBookmarks.toml");
         path
     })
 }
