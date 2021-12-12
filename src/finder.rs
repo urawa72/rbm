@@ -39,6 +39,7 @@ pub fn finder(bookmarks: Vec<Bookmark>) {
 
     for item in selected_items.iter() {
         let url = item.output();
+        // only for Mac
         Command::new("open")
             .arg(url.as_ref())
             .output()

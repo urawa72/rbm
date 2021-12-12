@@ -36,9 +36,17 @@ pub fn add_bookmark(journal_file: PathBuf) -> Result<(), Error> {
     stdout().flush()?;
     handle.read_line(&mut tags)?;
 
+    let tags = tags
+        .trim()
+        .split(",")
+        .collect::<Vec<_>>()
+        .iter()
+        .map(|&tag| "#".to_string() + tag + " ")
+        .collect::<String>();
+
     let bookmark = Bookmark {
         url: url.trim().to_string(),
-        inner: title.trim().to_string() + " [" + tags.trim() + "]",
+        inner: format!("{} {}", title.trim().to_string(), tags.trim()),
     };
 
     let toml = toml::to_string(&bookmark);
