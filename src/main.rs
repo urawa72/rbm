@@ -1,10 +1,7 @@
 use std::path::PathBuf;
-
-use cli::{Action::*, CommandLineArgs};
 use structopt::StructOpt;
-
-mod bookmarks;
-mod cli;
+use rbm::bookmarks::{add_bookmark, list_bookmarks};
+use rbm::cli::{Action::*, CommandLineArgs};
 
 fn find_journal_file() -> Option<PathBuf> {
     home::home_dir().map(|mut path| {
@@ -19,8 +16,8 @@ fn main() -> anyhow::Result<()> {
     let journal_file = find_journal_file().expect("Failed to find journal file");
 
     match action {
-        Add => bookmarks::add_bookmark(journal_file),
-        List => bookmarks::list_bookmarks(journal_file),
+        Add => add_bookmark(journal_file),
+        List => list_bookmarks(journal_file),
     }?;
     Ok(())
 }
