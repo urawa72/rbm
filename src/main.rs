@@ -1,23 +1,17 @@
-use std::path::PathBuf;
+use rbm::config::{find_config_file, load_config};
 use structopt::StructOpt;
 use rbm::bookmarks::{add_bookmark, list_bookmarks};
 use rbm::cli::{Action::*, CommandLineArgs};
 
-fn find_journal_file() -> Option<PathBuf> {
-    home::home_dir().map(|mut path| {
-        path.push(".RustyBookmarks.toml");
-        path
-    })
-}
-
 fn main() -> anyhow::Result<()> {
     let CommandLineArgs { action } = CommandLineArgs::from_args();
 
-    let journal_file = find_journal_file().expect("Failed to find journal file");
+    let config_file_path = find_config_file().expect("Failed to find config file");
+    let config = load_config(config_file_path).expect("Failed to load config file");
 
     match action {
-        Add => add_bookmark(journal_file),
-        List => list_bookmarks(journal_file),
+        Add => add_bookmark(config.path),
+        List => list_bookmarks(config.path),
     }?;
     Ok(())
 }

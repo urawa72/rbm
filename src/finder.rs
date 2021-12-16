@@ -35,7 +35,7 @@ pub fn finder(bookmarks: Vec<Bookmark>) {
             Key::Enter => out.selected_items,
             _ => Vec::new(),
         })
-        .unwrap_or_else(|| Vec::new());
+        .unwrap_or_else(Vec::new);
 
     for item in selected_items.iter() {
         let url = item.output();

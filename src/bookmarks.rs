@@ -38,7 +38,7 @@ pub fn add_bookmark(journal_file: PathBuf) -> Result<(), Error> {
 
     let tags = tags
         .trim()
-        .split(",")
+        .split(',')
         .collect::<Vec<_>>()
         .iter()
         .map(|&tag| "#".to_string() + tag + " ")
