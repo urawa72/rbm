@@ -47,7 +47,7 @@ pub fn add_bookmark(file_path: PathBuf) -> Result<(), Error> {
 
     let bookmark = Bookmark {
         url: url.trim().to_string(),
-        inner: format!("{} {}", title.trim().to_string(), tags.trim()),
+        inner: format!("{} {}", title.trim(), tags.trim()),
     };
 
     let toml = toml::to_string(&bookmark);
