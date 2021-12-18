@@ -67,13 +67,16 @@ pub fn add_bookmark(file_path: PathBuf) -> Result<(), Error> {
 
 /// List all bookmarks from toml file, and launch fuzzy finder.
 pub fn list_bookmarks(file_path: PathBuf) -> Result<(), Error> {
-    let toml = read_to_string(file_path)?;
-    let bookmarks: Result<Bookmarks, toml::de::Error> = toml::from_str(&toml);
-    let bookmarks = match bookmarks {
-        Ok(bookmarks) => bookmarks,
-        Err(e) => panic!("Failed to load toml: {}", e),
-    };
-    finder(bookmarks.bookmark);
-
+    if !file_path.exists() {
+        println!("Bookmarks are not exist. Add new bookmark by 'rbm add'.");
+    } else {
+        let toml = read_to_string(file_path)?;
+        let bookmarks: Result<Bookmarks, toml::de::Error> = toml::from_str(&toml);
+        let bookmarks = match bookmarks {
+            Ok(bookmarks) => bookmarks,
+            Err(e) => panic!("Failed to load toml: {}", e),
+        };
+        finder(bookmarks.bookmark);
+    }
     Ok(())
 }
