@@ -16,6 +16,7 @@ impl SkimItem for Bookmark {
     }
 }
 
+/// Search bookmark by fuzzy finder.
 pub fn finder(bookmarks: Vec<Bookmark>) {
     let options = SkimOptionsBuilder::default()
         .height(Some("50%"))
@@ -39,10 +40,11 @@ pub fn finder(bookmarks: Vec<Bookmark>) {
 
     for item in selected_items.iter() {
         let url = item.output();
-        // only for Mac
+        // Only for Mac
+        // TODO: Open browser on linux
         Command::new("open")
             .arg(url.as_ref())
             .output()
-            .expect("faild to execute process");
+            .expect("Faild to execute process");
     }
 }

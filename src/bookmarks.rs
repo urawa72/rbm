@@ -17,7 +17,8 @@ pub struct Bookmark {
     pub inner: String,
 }
 
-pub fn add_bookmark(journal_file: PathBuf) -> Result<(), Error> {
+/// Add bookmark url and search string to toml file.
+pub fn add_bookmark(file_path: PathBuf) -> Result<(), Error> {
     let reader = stdin();
     let mut handle = reader.lock();
 
@@ -57,15 +58,16 @@ pub fn add_bookmark(journal_file: PathBuf) -> Result<(), Error> {
     let mut f = OpenOptions::new()
         .create(true)
         .append(true)
-        .open(journal_file)?;
+        .open(file_path)?;
     write!(f, "[[bookmark]]\n{}\n", toml)?;
     f.flush()?;
 
     Ok(())
 }
 
-pub fn list_bookmarks(journal_file: PathBuf) -> Result<(), Error> {
-    let toml = read_to_string(journal_file)?;
+/// List all bookmarks from toml file, and launch fuzzy finder.
+pub fn list_bookmarks(file_path: PathBuf) -> Result<(), Error> {
+    let toml = read_to_string(file_path)?;
     let bookmarks: Result<Bookmarks, toml::de::Error> = toml::from_str(&toml);
     let bookmarks = match bookmarks {
         Ok(bookmarks) => bookmarks,
