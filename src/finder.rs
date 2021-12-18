@@ -16,7 +16,7 @@ impl SkimItem for Bookmark {
     }
 }
 
-/// Search bookmark by fuzzy finder.
+/// Search bookmark with fuzzy finder.
 pub fn finder(bookmarks: Vec<Bookmark>) {
     let options = SkimOptionsBuilder::default()
         .height(Some("50%"))
