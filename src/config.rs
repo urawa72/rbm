@@ -26,8 +26,11 @@ pub fn load_config() -> Result<Config, Box<dyn std::error::Error>> {
         Ok(toml) => toml,
         Err(_) => {
             // Create new config file if not exist
-            let bookmarks_file_path = find_bookmarks_file().expect("Failed to find the bookmarks file");
-            let config = Config { path: bookmarks_file_path };
+            let bookmarks_file_path =
+                find_bookmarks_file().expect("Failed to find the bookmarks file");
+            let config = Config {
+                path: bookmarks_file_path,
+            };
             let config_file = ConfigFile { config };
             let toml = toml::to_string(&config_file).expect("Failed to parse into toml string");
             let mut f = OpenOptions::new()

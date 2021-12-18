@@ -1,7 +1,7 @@
-use rbm::config::load_config;
-use structopt::StructOpt;
 use rbm::bookmarks::{add_bookmark, list_bookmarks};
 use rbm::cli::{Action::*, CommandLineArgs};
+use rbm::config::load_config;
+use structopt::StructOpt;
 
 fn main() -> anyhow::Result<()> {
     let CommandLineArgs { action } = CommandLineArgs::from_args();

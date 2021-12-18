@@ -1,10 +1,7 @@
+use crate::bookmarks::Bookmark;
 use skim::prelude::*;
 use skim::{Skim, SkimItemReceiver, SkimItemSender};
-use std::{
-    process::Command,
-    sync::Arc,
-};
-use crate::bookmarks::Bookmark;
+use std::{process::Command, sync::Arc};
 
 impl SkimItem for Bookmark {
     fn text(&self) -> Cow<str> {
