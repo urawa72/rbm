@@ -2,10 +2,13 @@
 name = "rbm"
 version = "0.1.0"
 edition = "2021"
-description = "A command line bookmark management app written in Rust!"
-readme = "README.md"
+authors = ["yuki-k <urawa72@gmail.com>"]
+repository = "https://github.com/urawa72/rbm"
+categories = ["command-line-utilities"]
 keywords = ["bookmark","cli"]
 license = "MIT"
+description = "A command line bookmark management app written in Rust!"
+readme = "README.md"
 
 [[bin]]
 name = "rbm"
