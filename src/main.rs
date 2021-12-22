@@ -1,8 +1,13 @@
-use rbm::cli::{Action::*, CommandLineArgs};
-use rbm::config::load_config;
 use structopt::StructOpt;
-
+mod cli;
+use cli::{Action::*, CommandLineArgs};
+mod config;
+use config::load_config;
 mod cmd;
+use cmd::add::add_bookmark;
+use cmd::list::list_bookmarks;
+mod bookmark;
+mod finder;
 
 fn main() -> anyhow::Result<()> {
     let CommandLineArgs { action } = CommandLineArgs::from_args();
@@ -10,8 +15,8 @@ fn main() -> anyhow::Result<()> {
     let config = load_config().expect("Failed to load the config file");
 
     match action {
-        Add => cmd::add::add_bookmark(config.path),
-        List => cmd::list::list_bookmarks(config.path),
+        Add => add_bookmark(config.path),
+        List => list_bookmarks(config.path),
     }?;
     Ok(())
 }

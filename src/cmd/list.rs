@@ -1,5 +1,5 @@
-use rbm::bookmarks::Bookmarks;
-use rbm::finder::finder;
+use crate::bookmark::Bookmarks;
+use crate::finder::finder;
 use std::{fs::read_to_string, io::Error, path::PathBuf};
 
 /// List all bookmarks from the toml file, and launch fuzzy finder.

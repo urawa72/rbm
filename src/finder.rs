@@ -1,4 +1,4 @@
-use crate::bookmarks::Bookmark;
+use crate::bookmark::Bookmark;
 use skim::prelude::*;
 use skim::{Skim, SkimItemReceiver, SkimItemSender};
 use std::{process::Command, sync::Arc};

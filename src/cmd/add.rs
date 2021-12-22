@@ -1,4 +1,4 @@
-use rbm::bookmarks::Bookmark;
+use crate::bookmark::Bookmark;
 use std::{
     fs::OpenOptions,
     io::{stdin, stdout, BufRead, Error, Write},
