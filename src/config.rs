@@ -1,11 +1,9 @@
+use serde::{Deserialize, Serialize};
 use std::{
     fs::{read_to_string, OpenOptions},
     io::Write,
     path::PathBuf,
 };
-
-use serde::Deserialize;
-use serde::Serialize;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct ConfigFile {
