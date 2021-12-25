@@ -42,5 +42,5 @@ You can change the location of `rbm-bookmarks.toml` by changing the path of the 
 
 ```toml
 [config]
-path = `/Users/urawa72/rbm-bookmarks.toml`
+path = '/Users/urawa72/rbm-bookmarks.toml'
 ```
