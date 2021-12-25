@@ -1,16 +1,20 @@
-name: Lint and Test
+name: Lint
 
 on:
   pull_request:
-  push:
-    branches:
-      - master
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v2
+        - uses: actions/cache@v2
+          with:
+            path: |
+              ~/.cargo/registry
+              ~/.cargo/git
+              target
+            key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
         - uses: actions-rs/toolchain@v1
           with:
             toolchain: nightly
@@ -20,24 +24,3 @@ jobs:
           run: cargo +nightly fmt --all -- --check
         - name: Run clippy
           run: cargo clippy -- -D warnings
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: actions/cache@v2
-        with:
-          path: |
-            target
-          key: ${{ runner.os }}-cargo-check-test-${{ matrix.toolchain }}-${{ hashFiles('**/Cargo.lock') }}
-      - name: Build
-        run: cargo check
-        env:
-          CARGO_INCREMENTAL: 0
-          RUSTFLAGS: "-C debuginfo=0 -D warnings"
-      - name: Run tests
-        run: cargo test --workspace
-        if: ${{ runner.os == 'Linux' }}
-        env:
-          CARGO_INCREMENTAL: 0
-          RUSTFLAGS: "-C debuginfo=0 -D warnings"
