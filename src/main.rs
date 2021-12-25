@@ -1,13 +1,14 @@
-use structopt::StructOpt;
 mod cli;
-use cli::{Action::*, CommandLineArgs};
 mod config;
-use config::load_config;
 mod cmd;
-use cmd::add::add_bookmark;
-use cmd::list::list_bookmarks;
 mod bookmark;
 mod finder;
+
+use structopt::StructOpt;
+use cli::{Action::*, CommandLineArgs};
+use config::load_config;
+use cmd::add::add_bookmark;
+use cmd::list::list_bookmarks;
 
 fn main() -> anyhow::Result<()> {
     let CommandLineArgs { action } = CommandLineArgs::from_args();
